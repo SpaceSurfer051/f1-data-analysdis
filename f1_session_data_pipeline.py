@@ -40,7 +40,7 @@ def load_to_bq(files, bucket_name, bigquery_project_dataset, **kwargs):
         source_format="CSV",
         write_disposition="WRITE_TRUNCATE",
         autodetect=True,
-        gcp_conn_id="gcp_conn",
+        gcp_conn_id="google_cloud_default",
     )
 
     return gcs_to_bq.execute(kwargs)

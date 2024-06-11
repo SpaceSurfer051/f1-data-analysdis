@@ -16,7 +16,11 @@ def load_csv_from_gcs(bucket_name, object_name):
     return pd.read_csv(io.StringIO(file_content.decode("utf-8")))
 
 
-def fetch_and_upload_pit_data(bucket_name, execution_date, object_name, **kwargs):
+def fetch_and_upload_pit_data(**kwargs):
+    
+    bucket_name = kwargs["bucket_name"]
+    object_name = kwargs["object_name"]
+    execution_date = kwargs["execution_date"]
     
     existing_df = load_csv_from_gcs(bucket_name, object_name)
     
@@ -86,7 +90,7 @@ with DAG(
         python_callable=fetch_and_upload_pit_data,
         op_kwargs={
             "bucket_name": "{{ var.value.gcs_bucket_name }}",
-            "object_name": "{{ var.value.gcs_basic_pit_data }}",
+            "object_name": "{{ var.value.gcs_basic_pit_data}}",
             "execution_date": "{{ ds }}",
         },
         provide_context=True,

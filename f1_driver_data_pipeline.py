@@ -62,3 +62,13 @@ with DAG(
         python_callable=get_driver_data,
         op_kwargs={"bucket_name": "{{ var.value.gcs_bucket_name }}"},
     )
+
+    load_to_bigquery_task = GCSToBigQueryOperator(
+        task_id = "load_to_bigquery",
+        bucket = "{{ var.value.gcs_bucket_name }}", # 버킷 이름
+        source_objects = ["driver.csv"], # 경로
+        destination_project_dataset_table = "your_project.your_dataset.your_table",
+        source_format = "CSV",
+        write_disposition = "WRITE_TRUNCATE", # 데이터를 덮어쓰도록 설정 (또는 WRITE_APPEND)
+        gcp_conn_id = "google_cloud_default", # 연결 ID 지정
+    )

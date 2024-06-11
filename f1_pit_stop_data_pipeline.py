@@ -61,7 +61,7 @@ def fetch_and_upload_pit_data(bucket_name, execution_date, object_name, **kwargs
 
     # GCS에 업로드
     # date_str = datetime.now().strftime("%Y%m%d")
-    gcs_path = f"data/pit/pit_stop_data_" + execution_date + ".csv"
+    gcs_path = f"pit/pit_stop_data_" + execution_date + ".csv"
 
     gcs_hook = GCSHook(gcp_conn_id="google_cloud_default")
     gcs_hook.upload(

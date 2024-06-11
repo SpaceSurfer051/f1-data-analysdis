@@ -27,7 +27,7 @@ def fetch_and_upload_meetings_data(bucket_name, execution_date, **kwargs):
     csv_data = csv_buffer.getvalue()
 
     # GCS에 업로드
-    gcs_path = f"data/meetings/meeting_data_" + execution_date + ".csv"
+    gcs_path = f"meetings/meeting_data_" + execution_date + ".csv"
 
     gcs_hook = GCSHook(gcp_conn_id="google_cloud_default")
     gcs_hook.upload(

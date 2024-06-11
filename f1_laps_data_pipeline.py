@@ -36,7 +36,7 @@ with DAG(
 
         file_path = f"laps/laps_{session_key}.csv"
 
-        gcs_hook = GCSHook(gcp_conn_id="gcs_connection")
+        gcs_hook = GCSHook(gcp_conn_id="google_cloud_default")
         gcs_hook.upload(
             bucket_name=bucket_name,
             object_name=file_path,

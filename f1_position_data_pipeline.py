@@ -33,7 +33,7 @@ def get_latest_records(**kwargs):
         file_name = "position_{}.csv".format(session_key)
         position_csv = latest_records.to_csv(file_name, index=False)
 
-        gcs_hook = GCSHook(gcp_conn_id="gcs_connection")
+        gcs_hook = GCSHook(gcp_conn_id="google_cloud_default")
         gcs_hook.upload(
             bucket_name=bucket_name,
             object_name = file_name,

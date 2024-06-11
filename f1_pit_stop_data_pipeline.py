@@ -90,22 +90,10 @@ with DAG(
         python_callable=fetch_and_upload_pit_data,
         op_kwargs={
             "bucket_name": "{{ var.value.gcs_bucket_name }}",
-            "object_name": "{{ var.value.gcs_basic_pit_data}}",
+            "object_name": "{{ var.value.gcs_basic_pit_data }}",
             "execution_date": "{{ ds }}",
         },
         provide_context=True,
     )
-    
-    load_to_bq_task = GCSToBigQueryOperator(
-        task_id="load_to_bq",
-        bucket="{{ var.value.gcs_bucket_name }}",
-        source_objects=["pit/pit_stop_data_{{ ds }}.csv"],
-        destination_project_dataset_table="{{ var.value.bigquery_project_dataset }}.pit",
-        source_format="CSV",
-        write_disposition="WRITE_TRUNCATE",
-        autodetect=True,
-        gcp_conn_id="google_cloud_default",
-    )
-    
 
-fetch_and_upload_pit_data_task >> load_to_bq_task
+fetch_and_upload_pit_data_task 

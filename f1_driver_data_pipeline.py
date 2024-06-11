@@ -56,19 +56,3 @@ with DAG(
         except Exception as e:
             print(f"Error occurred: {e}")
             raise
-
-    driver_task = PythonOperator(
-        task_id="get_driver",
-        python_callable=get_driver_data,
-        op_kwargs={"bucket_name": "{{ var.value.gcs_bucket_name }}"},
-    )
-
-    load_to_bigquery_task = GCSToBigQueryOperator(
-        task_id = "load_to_bigquery",
-        bucket = "{{ var.value.gcs_bucket_name }}", # 버킷 이름
-        source_objects = ["path/in/bucket/data.csv"], # 경로
-        destination_project_dataset_table = "your_project.your_dataset.your_table",
-        source_format = "CSV",
-        write_disposition = "WRITE_TRUNCATE", # 데이터를 덮어쓰도록 설정 (추가: WRITE_APPEND)
-        dag = dag,
-    )

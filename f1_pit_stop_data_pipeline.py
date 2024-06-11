@@ -71,7 +71,7 @@ def fetch_and_upload_pit_data(bucket_name, execution_date, object_name, **kwargs
     )
 
 with DAG(
-    dag_id="f1_pit_stop_data_pipeline_v3",
+    dag_id="f1_pit_stop_data_pipeline",
     start_date=datetime(2024, 1, 1),
     schedule=None,
     catchup=False,

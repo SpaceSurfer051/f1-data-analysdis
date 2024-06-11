@@ -126,8 +126,5 @@ with DAG(
     )
 
     get_meeting_and_session >> check_condition_to_trigger
-    check_condition_to_trigger >> trigger_laps_dag >> trigger_session_dag
-    check_condition_to_trigger >> pit_trigger
-    check_condition_to_trigger >> meetings_trigger
-    check_condition_to_trigger >> position_trigger
+    check_condition_to_trigger >> trigger_laps_dag >> trigger_session_dag >> pit_trigger >> meetings_trigger  >> position_trigger
     check_condition_to_trigger >> skip

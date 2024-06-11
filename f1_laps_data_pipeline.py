@@ -14,7 +14,7 @@ with DAG(
     catchup=False,
 ) as dag:
 
-    def get_laps(bucket_name, bigquery_conn_name, **kwargs):
+    def get_laps(bucket_name, **kwargs):
         conf = kwargs["dag_run"].conf
 
         session_key = conf.get("session_key")

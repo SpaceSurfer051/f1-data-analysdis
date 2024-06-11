@@ -7,17 +7,26 @@ import requests
 
 
 # 문자열을 datetime 객체로 변환하는 함수
-def parse_datetime(date_str):
-    if "." in date_str:
-        # 소수점이 있는 경우
-        return datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S.%f%z")
+def parse_datetime(date_str, execution_flag = False):
+    if execution_flag:
+        if "." in date_str:
+            # 소수점이 있는 경우
+            return datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S.%f%z")
+        else:
+            # 소수점이 없는 경우
+            return datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S%z")
     else:
-        # 소수점이 없는 경우
-        return datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S%z")
+        if "." in date_str:
+            # 소수점이 있는 경우
+            return datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S.%f%z")
+        else:
+            # 소수점이 없는 경우
+            return datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S%z")
+    
 
 
 def get_meeting_and_session_from_open_f1(**kwargs):
-    execution_date = parse_datetime(kwargs["execution_date"])
+    execution_date = parse_datetime(kwargs["execution_date"], True)
     left_search_window = (
         (execution_date - timedelta(days=3)).date().strftime("%Y-%m-%dT%H:%M:%S")
     )
@@ -40,7 +49,7 @@ def get_meeting_and_session_from_open_f1(**kwargs):
         ).json()
 
         if session[-1]["session_type"] in ["Qualifying", "Race"]:
-            session_date = parse_datetime(session[-1]["date_start"])
+            session_date = parse_datetime(session[-1]["date_start"], False)
 
             if session_date.date() == execution_date.date():
                 print("new Race is hold!! session date:", session_date.date())

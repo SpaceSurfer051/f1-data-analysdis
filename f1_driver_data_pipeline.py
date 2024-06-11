@@ -43,7 +43,7 @@ with DAG(
             # GCS 업로드
             file_path = "driver.csv" # session_key에 따라 다른 파일로 추가?
 
-            gcs_hook = GCSHook(gcp_conn_id="gcs_connection")
+            gcs_hook = GCSHook(gcp_conn_id="google_cloud_default")
             gcs_hook.upload(
                 bucket_name=bucket_name,
                 object_name=file_path,

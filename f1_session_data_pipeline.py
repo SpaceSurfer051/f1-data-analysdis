@@ -20,7 +20,7 @@ def save_session_data_to_gcs(bucket_name, **kwargs):
 
     file_path = f"sessions/sessions.csv"
 
-    gcs_hook = GCSHook(gcp_conn_id="gcs_connection")
+    gcs_hook = GCSHook(gcp_conn_id="google_cloud_default")
     gcs_hook.upload(
         bucket_name=bucket_name,
         object_name=file_path,

@@ -42,7 +42,7 @@ def get_laps(bucket_name, **kwargs):
 
 
 def list_gcs_files(bucket_name, prefix, **kwargs):
-    hook = GCSHook(gcp_conn_id="gcp_conn")
+    hook = GCSHook(gcp_conn_id="google_cloud_default")
     files = hook.list(bucket_name, prefix=prefix)
     print("laps files: ", files)
     return files

@@ -5,8 +5,6 @@ from airflow.providers.google.cloud.hooks.gcs import GCSHook
 import requests
 import pandas as pd
 import io
-import os
-
 
 # GCS에서 파일을 다운로드하고 DataFrame으로 로드하는 함수
 def load_csv_from_gcs(bucket_name, object_name):
@@ -15,7 +13,7 @@ def load_csv_from_gcs(bucket_name, object_name):
     return pd.read_csv(io.StringIO(file_content.decode('utf-8')))
 
 
-def fetch_and_upload_pit_data(bucket_name, execution_date, object_name, **kwargs):    
+def fetch_and_upload_pit_data(bucket_name, object_name, execution_date, **kwargs):    
 
     existing_df = load_csv_from_gcs(bucket_name, object_name)
 
@@ -60,7 +58,7 @@ def fetch_and_upload_pit_data(bucket_name, execution_date, object_name, **kwargs
 
     # GCS에 업로드
     # date_str = datetime.now().strftime("%Y%m%d")
-    gcs_path = f"pit/pit_stop_data_"+ execution_date +".csv"
+    gcs_path = "pit/pit_stop_data_"+ execution_date +".csv"
 
     gcs_hook = GCSHook(gcp_conn_id="google_cloud_default")
     gcs_hook.upload(
@@ -81,7 +79,7 @@ with DAG(
         task_id="fetch_and_upload_pit_data",
         python_callable=fetch_and_upload_pit_data,
         op_kwargs={"bucket_name": "{{ var.value.gcs_bucket_name }}",
-                   "object_name": "{{ var.value.gcs_basic_pit_data}}",
+                   "object_name": "{{ var.value.gcs_basic_pit_data }}",
                    "execution_date": "{{ ds }}"},
         provide_context=True,
     )

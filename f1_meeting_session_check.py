@@ -100,21 +100,34 @@ with DAG(
         task_id="trigger_session_dag",
         trigger_dag_id="f1_session_data_pipeline"
     )
-
-    trigger_position_dag = TriggerDagRunOperator(
-        task_id="trigger_position_dag",
+    
+    pit_trigger = TriggerDagRunOperator(
+        task_id="pit_trigger",
+        trigger_dag_id="f1_pit_stop_data_pipeline"
+    )
+    
+    meetings_trigger = TriggerDagRunOperator(
+        task_id="meetings_trigger",
+        trigger_dag_id="f1_meetings_data_pipeline"
+    )
+    
+    position_trigger = TriggerDagRunOperator(
+        task_id="position_trigger",
         trigger_dag_id="f1_position_data_pipeline",
         conf={
             "session_key": "{{ task_instance.xcom_pull(task_ids='get_meeting_and_session', key='session_key') }}",
             "meeting_key": "{{ task_instance.xcom_pull(task_ids='get_meeting_and_session', key='meeting_key') }}",
         },
     )
-        
+
     skip = DummyOperator(
         task_id="skip_trigger",
         dag=dag,
     )
 
     get_meeting_and_session >> check_condition_to_trigger
-    check_condition_to_trigger >> trigger_laps_dag >> trigger_session_dag >> trigger_position_dag
+    check_condition_to_trigger >> trigger_laps_dag >> trigger_session_dag
+    check_condition_to_trigger >> pit_trigger
+    check_condition_to_trigger >> meetings_trigger
+    check_condition_to_trigger >> position_trigger
     check_condition_to_trigger >> skip

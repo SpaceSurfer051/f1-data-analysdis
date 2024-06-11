@@ -12,8 +12,7 @@ import logging
 
 
 # task 정의
-# 경기 종료 결과 가져오기
-def get_latest_records(bucket_name, **kwargs):
+def get_records(bucket_name, **kwargs):
     conf = kwargs["dag_run"].conf
     session_key = conf.get("session_key")
 
@@ -25,16 +24,10 @@ def get_latest_records(bucket_name, **kwargs):
 
         position_df = pd.DataFrame(response)
 
-        latest_records = (
-            position_df.sort_values(by="date", ascending=False)
-            .groupby("driver_number")
-            .first()
-        )
-
         # GCS에 저장(csv 파일))
-        file_name = "position_{}.csv".format(session_key)
-        file_path = "position/{}".format(file_name)
-        position_csv = latest_records.to_csv(file_name)
+        file_name = "position_full_{}.csv".format(session_key)
+        file_path = "position_full/{}".format(file_name)
+        position_csv = position_df.to_csv(file_name, index=False)
 
         gcs_hook = GCSHook(gcp_conn_id="google_cloud_default")
         gcs_hook.upload(
@@ -65,7 +58,7 @@ def load_gcs_to_bq(**kwargs):
         task_id="load_gcs_to_bq",
         bucket=bucket_name,
         source_objects=files,
-        destination_project_dataset_table=bigquery_project_dataset + ".position",
+        destination_project_dataset_table=bigquery_project_dataset + ".position_full",
         source_format="CSV",
         write_disposition="WRITE_TRUNCATE",
         gcp_conn_id="google_cloud_default",
@@ -76,7 +69,7 @@ def load_gcs_to_bq(**kwargs):
 
 # DAG 정의
 with DAG(
-    dag_id="f1_position_data_pipeline",
+    dag_id="f1_position_full_data_pipeline",
     start_date=datetime(2024, 1, 1),
     catchup=False,
     schedule=None,
@@ -87,8 +80,8 @@ with DAG(
 
     # Operator
     postion_task = PythonOperator(
-        task_id="get_latest_records",
-        python_callable=get_latest_records,
+        task_id="get_records",
+        python_callable=get_records,
         op_kwargs={"bucket_name": bucket_name},
         provide_context=True,
     )
@@ -96,7 +89,7 @@ with DAG(
     list_and_load_files_task = PythonOperator(
         task_id="list_and_load_files_task",
         python_callable=list_gcs_files,
-        op_kwargs={"bucket_name": bucket_name, "prefix": "position/"},
+        op_kwargs={"bucket_name": bucket_name, "prefix": "position_full/"},
     )
 
     load_task = PythonOperator(
@@ -109,4 +102,4 @@ with DAG(
         provide_context=True,
     )
 
-postion_task >> list_and_load_files_task >> load_task
+    postion_task >> list_and_load_files_task >> load_task

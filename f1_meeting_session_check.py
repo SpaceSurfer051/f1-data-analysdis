@@ -100,6 +100,16 @@ with DAG(
         task_id="trigger_session_dag",
         trigger_dag_id="f1_session_data_pipeline"
     )
+    
+    pit_trigger = TriggerDagRunOperator(
+        task_id="pit_trigger",
+        trigger_dag_id="f1_pit_stop_data_pipeline"
+    )
+    
+    meetings_trigger = TriggerDagRunOperator(
+        task_id="meetings_trigger",
+        trigger_dag_id="f1_meetings_data_pipeline"
+    )
 
     skip = DummyOperator(
         task_id="skip_trigger",
@@ -108,4 +118,6 @@ with DAG(
 
     get_meeting_and_session >> check_condition_to_trigger
     check_condition_to_trigger >> trigger_laps_dag >> trigger_session_dag
+    check_condition_to_trigger >> pit_trigger
+    check_condition_to_trigger >> meetings_trigger
     check_condition_to_trigger >> skip

@@ -56,3 +56,9 @@ with DAG(
         except Exception as e:
             print(f"Error occurred: {e}")
             raise
+
+    driver_task = PythonOperator(
+        task_id="get_driver",
+        python_callable=get_driver_data,
+        op_kwargs={"bucket_name": "{{ var.value.gcs_bucket_name }}"},
+    )

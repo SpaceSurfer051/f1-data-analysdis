@@ -31,12 +31,13 @@ def get_latest_records(**kwargs):
 
         # GCS에 저장(csv 파일))
         file_name = "position_{}.csv".format(session_key)
+        file_path = "position/{}".format(file_name)
         position_csv = latest_records.to_csv(file_name, index=False)
 
         gcs_hook = GCSHook(gcp_conn_id="google_cloud_default")
         gcs_hook.upload(
             bucket_name=bucket_name,
-            object_name = file_name,
+            object_name = file_path,
             filename=file_name,
             data=position_csv,
             mime_type="text/csv",

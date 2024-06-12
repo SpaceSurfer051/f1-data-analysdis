@@ -89,7 +89,7 @@ with DAG(
         task_id="load_to_bq",
         bucket="{{ var.value.gcs_bucket_name }}", 
         source_objects=["pit/pit_stop_data_{{ ds }}.csv"], 
-        destination_project_dataset_table="{{ var.value.bigquery_project_dataset }}",
+        destination_project_dataset_table="{{ var.value.bigquery_project_dataset }}.pit",
         source_format="CSV",
         write_disposition="WRITE_TRUNCATE",  
         gcp_conn_id="google_cloud_default",  

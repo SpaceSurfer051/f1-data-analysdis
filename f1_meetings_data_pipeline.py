@@ -1,7 +1,9 @@
 from datetime import datetime
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
+from airflow.providers.google.cloud.transfers.gcs_to_bigquery import (
+    GCSToBigQueryOperator,
+)
 from airflow.providers.google.cloud.hooks.gcs import GCSHook
 import requests
 import pandas as pd
@@ -58,12 +60,12 @@ with DAG(
 
     load_to_bq_task = GCSToBigQueryOperator(
         task_id="load_to_bq",
-        bucket="{{ var.value.gcs_bucket_name }}", 
-        source_objects=["meetings/meeting_data_{{ ds }}.csv"], 
+        bucket="{{ var.value.gcs_bucket_name }}",
+        source_objects=["meetings/meeting_data_{{ ds }}.csv"],
         destination_project_dataset_table="{{ var.value.bigquery_project_dataset }}.meeting",
         source_format="CSV",
-        write_disposition="WRITE_TRUNCATE",  
-        gcp_conn_id="google_cloud_default",  
+        write_disposition="WRITE_TRUNCATE",
+        gcp_conn_id="google_cloud_default",
     )
 
 fetch_and_upload_meetings_data_task >> load_to_bq_task

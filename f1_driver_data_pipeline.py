@@ -39,12 +39,12 @@ with DAG(
             driver_df["team_colour"] = driver_df.groupby("team_name")[
                 "team_colour"
             ].transform(lambda x: x.ffill().bfill())
-            driver_df["first_name"] = driver_df.groupby("full_name")[
-                "first_name"
-            ].transform(lambda x: x.ffill().bfill())
-            driver_df["last_name"] = driver_df.groupby("full_name")[
-                "last_name"
-            ].transform(lambda x: x.ffill().bfill())
+            driver_df["first_name"] = pd.DataFrame(
+                map(lambda x: x.split()[0], driver_df["full_name"])
+            )
+            driver_df["last_name"] = pd.DataFrame(
+                map(lambda x: x.split()[-1], driver_df["full_name"])
+            )
             driver_df["headshot_url"] = driver_df.groupby("full_name")[
                 "headshot_url"
             ].transform(lambda x: x.ffill())

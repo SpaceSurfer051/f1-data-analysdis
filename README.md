@@ -1,7 +1,11 @@
-# Seasonal songs
+# f1 data analysis
 
 ## Skills & Tech Stack
-<img src="https://img.shields.io/badge/django-20232a.svg?style=for-the-badge&logo=react&logoColor=092E20" /> <img src="https://img.shields.io/badge/python-20232a.svg?style=for-the-badge&logo=react&logoColor=3776AB" /> <img src="https://img.shields.io/badge/html5-20232a.svg?style=for-the-badge&logo=react&logoColor=E34F26" /> <img src="https://img.shields.io/badge/css3-20232a.svg?style=for-the-badge&logo=react&logoColor=1572B6" /> <img src="https://img.shields.io/badge/javascript-20232a.svg?style=for-the-badge&logo=react&logoColor=F7DF1E" /> 
+
+| **언어** | Python |
+| **배포** | GKE |
+| **대시보드** | Superset |
+| **파이프라인** | Airflow |
 
 ## 프로젝트 목적
 F1 통계 데이터를 통해 대시보드를 작성해 시즌별 레이스 결과,드라이버 성적,팀 순위,랩 타임 등을 분석
@@ -9,7 +13,7 @@ F1 통계 데이터를 통해 대시보드를 작성해 시즌별 레이스 결�
 
 
 ## 데이터 파이프라인 
-<img src="https://github.com/SpaceSurfer051/f1-data-analysis/blob/main/img/f1_data_pipeline.png" width="1000" height="1000"/> 
+<img src="https://github.com/SpaceSurfer051/f1-data-analysis/blob/main/img/f1_data_pipeline.png" width="1000" height="750"/> 
 ### dags
 Task 1: 데이터 추출 및 GCS 업로드
 - OPEN F1 API로 GET 요청을 보내 새로운 Race Session에 대한 데이터를 추출
